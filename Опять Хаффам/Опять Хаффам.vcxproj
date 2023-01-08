@@ -134,6 +134,7 @@
   <ItemGroup>
     <Text Include="11.txt" />
     <Text Include="112.txt" />
+    <Text Include="12.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />

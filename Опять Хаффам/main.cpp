@@ -11,7 +11,7 @@ void main() {
 	int check;
 	
 	while (true) {
-		cout << "Для кодирования введите 0" << endl;
+		cout << endl<<"Для кодирования введите 0" << endl;
 		cout << "Для разкодирования введите 1" << endl;
 		cout << "Для выхода введите что угодно" << endl;
 		scanf_s("%d", &check);

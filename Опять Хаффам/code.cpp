@@ -22,11 +22,16 @@ void Build_cod(Node* root) {
 	}
 
 	if (root->sym) {
-		tab[root->sym].vec = vec;  // если наткнулись на букву, то ассоциируем её с кодом в tab
+		int i = 0;
+		for (; i < 255; i++) {
+			if (root->sym == tab[i].c) {
+				break;
+			}
+		}
+		tab[i].vec = vec;  // если наткнулись на букву, то ассоциируем её с кодом в tab
 	}
 	if (!vec.empty()) {	vec.pop_back(); }//сокращаем код на 1
 }
-
 void coding() {
 	setlocale(LC_ALL, "Russian");
 	string file_name_to_code;
@@ -40,15 +45,20 @@ void coding() {
 	int N=0;
 	while (!file1.eof()) { //ищём количество вхождений каждого символа
 		char  c0 = file1.get();
-		if (c0>0) {
-			m[c0].c = c0;
-			m[c0].count++;
-			tab[c0].c = c0;
+			for (int i = 0; i < 255; i++) {
+				if (m[i].c == 0) {
+					m[i].c = c0;
+					m[i].count++;
+					tab[i].c = c0;
+					break;
+				}
+				if (m[i].c == c0) {
+					m[i].count++;
+					break;
+				}
 		}
 	}
-	for (int i = 0; i < 255; i++) {
-		if (m[i].count > 0) { N++; }
-	}
+	for (int i = 0; i < 255; i++) {if (m[i].count > 0) { N++; }}
 	int step = 255 / 2;       // в группе выбранных элементов проводим сортировку
 	while (step > 0) {       // прямой вставкой
 		for (int i = step; i < 255; i++) {
@@ -64,7 +74,7 @@ void coding() {
 	}
 	list <Node*> da;
 	for (int i = 0; i < 255; i++) {
-		if (m[i].count > 0) {
+		if (m[i].count >0) {
 			Node* k = new Node;
 			k->sym = m[i].c;
 			k->num = m[i].count;
@@ -89,7 +99,7 @@ void coding() {
 	char kar = 0;
 	file1_cip.write((char*)&c, sizeof(int));
 	for (int i = 0; i < 255;i++) {
-		if (m[i].count > 0) {
+		if (m[i].count >0) {
 			kar = m[i].c;
 			c = m[i].count;
 			file1_cip.write((char*)&kar, sizeof(char));
@@ -100,18 +110,21 @@ void coding() {
 	int count = 0; // счётчик
 	char b = 0; //вспомогательная переменная
 	while (!file1.eof()) {
-		char c = file1.get();
-		vector<bool> x = tab[c].vec;
-		for (int j = 0; j < x.size(); j++) {
-			b = b | x[j] << (7 - count); // преобразуем вектор x в байт
-			count++;
-			if (count == 8) { count = 0; file1_cip << b; b = 0; } // если достигли count = 8  байт записывем в file1_cip
-		}
+		char c = file1.get(); // здесь переделать
+		int i = 0;
+			for (; tab[i].c != c; i++);
+			vector<bool> x = tab[i].vec;
+			for (int j = 0; j < x.size(); j++) {
+				b = b | x[j] << (7 - count); // преобразуем вектор x в байт
+				count++;
+				if (count == 8) { count = 0; file1_cip << b; b = 0; } // если достигли count = 8  байт записывем в file1_cip
+			}
 	}
 
 	file1.close(); // не забываем закрыть файл
 	file1_cip.close(); // не забываем закрыть файл
 	return;
+	
 }
 
 

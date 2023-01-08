@@ -30,7 +30,6 @@ public:
 	}
 };
 #endif
-
 struct himan {
 	char c = 0;
 	int count = 0;

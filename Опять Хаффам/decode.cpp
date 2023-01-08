@@ -22,8 +22,9 @@ void Build_dec(Node* root) {
 	}
 
 	if (root->sym) {
-		tab1[root->sym].vec = vec1;  // если наткнулись на букву, то ассоциируем её с годом в tab1
-
+		int i = 0;
+		for (; root->sym != tab1[i].c && i < 255; i++);
+		tab1[i].vec = vec1;  // если наткнулись на букву, то ассоциируем её с кодом в tab
 	}
 	if (!vec1.empty()) {
 		vec1.pop_back(); //сокращаем код на 1}
@@ -46,29 +47,17 @@ void decode() {
 	file1.seekg(4, ios::beg);
 	char blu;
 	int c;
-	for (int i = 4; i < (zise * 5); i = i + 5) {
+	for (int i = 4,j=0; i < (zise * 5) && j<255; i = i + 5,j++) {
 		file1.seekg(i, ios::beg);
 		file1.read((char*)&blu, sizeof(char));
 		file1.seekg(i + 1, ios::beg);
 		file1.read((char*)&c, sizeof(int));
-		m[blu].count = c;
-		m[blu].c = blu;
+		m[j].count = c;
+		m[j].c = blu;
+		tab1[j].c = blu;
 	}
 	for (int i = 0; i < 255; i++) {
 		if (m[i].count > 0) { N++; }
-	}
-	int step = 255 / 2;       // в группе выбранных элементов проводим сортировку
-	while (step > 0) {       // прямой вставкой
-		for (int i = step; i < 255; i++) {
-			int j = i;
-			himan x = m[j];
-			while ((j >= step) && (x.count < m[j - step].count)) { //вместо обменов сделай сдвиги
-				m[j] = m[j - step];
-				j = j - step;
-			}
-			m[j] = x;
-		}
-		step = step / 2;     // уменьшаем шаг, повторям пока шаг больше нуля
 	}
 	list<Node*> rar;
 	for (int i = 0; i < 255; i++) {
